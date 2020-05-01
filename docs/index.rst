@@ -1,10 +1,10 @@
 .. Images
-.. |chat_1| image:: images/chat1.jpg
-.. |chat_2| image:: images/chat2.jpg
-.. |chat_3| image:: images/chat3.jpg
-.. |chat_4| image:: images/chat4.jpg
-.. |chat_5| image:: images/chat5.jpg
-.. |chat_6| image:: images/chat6.jpg
+.. |chat_1| image:: images/chat_1.jpg
+.. |chat_2| image:: images/chat_2.jpg
+.. |chat_3| image:: images/chat_3.jpg
+.. |chat_4| image:: images/chat_4.jpg
+.. |chat_5| image:: images/chat_5.jpg
+.. |chat_6| image:: images/chat_6.jpg
 
 .. Links
 .. |chat| raw:: html
