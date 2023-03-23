@@ -95,8 +95,7 @@ bool plugin_deliver(PLUGIN_HANDLE handle,
 	Logger::getLogger()->info("Hangouts notification plugin_deliver(): deliveryName=%s, notificationName=%s, triggerReason=%s, message=%s",
 							deliveryName.c_str(), notificationName.c_str(), triggerReason.c_str(), message.c_str());
 	Hangouts *hangouts = (Hangouts *)handle;
-	hangouts->notify(notificationName, triggerReason, message);
-	return true;
+	return hangouts->notify(notificationName, triggerReason, message);
 }
 
 /**
