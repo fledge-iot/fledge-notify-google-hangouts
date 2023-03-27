@@ -40,12 +40,13 @@ Hangouts::~Hangouts()
  * @param notificationName 	The name of this notification
  * @param triggerReason		Why the notification is being sent
  * @param message		The message to send
+ * @return bool			whether notify is successful or not
  */
-void Hangouts::notify(const string& notificationName, const string& triggerReason, const string& message)
+bool Hangouts::notify(const string& notificationName, const string& triggerReason, const string& message)
 {
-ostringstream   payload;
-SimpleHttps	*https = NULL;
-
+	ostringstream   payload;
+	SimpleHttps	*https = NULL;
+	bool retVal = true;
 
 	payload << "{ \"text\" : \"";
 	payload << "*" << notificationName << "*\\n\\n";
@@ -66,7 +67,7 @@ SimpleHttps	*https = NULL;
 	if (m_url.empty())
 	{
 		Logger::getLogger()->error("Hangouts webhook is not set");
-		return;
+		return false;
 	}
 
 	/**
@@ -95,17 +96,19 @@ SimpleHttps	*https = NULL;
 			https  = new SimpleHttps(hostAndPort);
 		}
 
-		int errorCode;
-		if ((errorCode = https->sendRequest("POST",
+		int resCode = https->sendRequest("POST",
 						    m_url,
 						    headers,
-						    payload.str())) != 200 &&
-		    errorCode == 202)
-		{
+						    payload.str());
+
+		std::string strResCode = to_string(resCode);
+                if(strResCode[0] != '2')
+                {
 			Logger::getLogger()->error("Failed to send notification to "
-						   "hangouts webhook %s, errorCode %d",
+						   "hangouts webhook %s, resCode %d",
 						   m_url.c_str(),
-						   errorCode);
+						   resCode);
+			retVal = false;
 		}
 	}
 	catch (exception &e)
@@ -114,6 +117,7 @@ SimpleHttps	*https = NULL;
 					   "to hangouts webhook %s: %s",
 					    m_url.c_str(),
 					    e.what());
+		retVal = false;
 	}
         catch (...)
 	{
@@ -124,12 +128,14 @@ SimpleHttps	*https = NULL;
 					   "to hangouts webhook  %s: %s",
 					    m_url.c_str(),
 					    name.c_str());
+		retVal = false;
 	}
 
 	if (https)
 	{
 		delete https;
 	}
+	return retVal;
 }
 
 /**
