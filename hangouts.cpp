@@ -164,8 +164,8 @@ void Hangouts::verifyURLFormat()
 		return;
 	}
 
-	// Verify Hnagouts webhook format
-	string hangoutURLformat =  "https://chat.googleapis.com/v1/spaces/";
+	// Verify Hangouts webhook format
+	string hangoutURLformat =  "https://chat.googleapis.com";
 
 	if (m_url.rfind(hangoutURLformat,0) == string::npos)
 	{
