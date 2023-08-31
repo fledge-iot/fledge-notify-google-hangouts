@@ -47,7 +47,7 @@ bool Hangouts::notify(const string& notificationName, const string& triggerReaso
 {
 	if (m_url.empty())
 	{
-		Logger::getLogger()->error("Hangouts webhook is not set");
+		Logger::getLogger()->error("Hangouts webhook URL is not valid.");
 		return false;
 	}
 
@@ -153,16 +153,23 @@ void Hangouts::reconfigure(const string& newConfig)
 }
 
 /**
- * Verify Google hangout webhook has valid URL format
+ * Verify Google hangouts webhook has valid URL format
  *
  */
 void Hangouts::verifyURLFormat()
 {
+	if (m_url.empty())
+	{
+		Logger::getLogger()->error("Hangouts webhook is not set.");
+		return;
+	}
+
+	// Verify Hnagouts webhook format
 	string hangoutURLformat =  "https://chat.googleapis.com/v1/spaces/";
 
-	if (m_url.substr(0,38) != hangoutURLformat)
+	if (m_url.rfind(hangoutURLformat,0) == string::npos)
 	{
 		m_url.clear();
-		Logger::getLogger()->error("Hangouts webhook URL format is not valid.");
+		Logger::getLogger()->error("Hangouts webhook URL is not valid.");
 	}
 }
