@@ -25,6 +25,7 @@ Hangouts::Hangouts(ConfigCategory *category)
 {
 	m_url = category->getValue("webhook");
 	m_text = category->getValue("text");
+	verifyURLFormat();
 }
 
 /**
@@ -44,6 +45,12 @@ Hangouts::~Hangouts()
  */
 bool Hangouts::notify(const string& notificationName, const string& triggerReason, const string& message)
 {
+	if (m_url.empty())
+	{
+		Logger::getLogger()->error("Hangouts webhook URL is not valid.");
+		return false;
+	}
+
 	ostringstream   payload;
 	SimpleHttps	*https = NULL;
 	bool retVal = true;
@@ -63,12 +70,6 @@ bool Hangouts::notify(const string& notificationName, const string& triggerReaso
 	std::vector<std::pair<std::string, std::string>> headers;
 	pair<string, string> header = make_pair("Content-type", "application/json");
 	headers.push_back(header);
-
-	if (m_url.empty())
-	{
-		Logger::getLogger()->error("Hangouts webhook is not set");
-		return false;
-	}
 
 	/**
 	 * Extract host and port from URL
@@ -148,4 +149,27 @@ void Hangouts::reconfigure(const string& newConfig)
 	ConfigCategory category("new", newConfig);
 	m_url = category.getValue("webhook");
 	m_text = category.getValue("text");
+	verifyURLFormat();
+}
+
+/**
+ * Verify Google hangouts webhook has valid URL format
+ *
+ */
+void Hangouts::verifyURLFormat()
+{
+	if (m_url.empty())
+	{
+		Logger::getLogger()->error("Hangouts webhook is not set.");
+		return;
+	}
+
+	// Verify Hangouts webhook format
+	string hangoutURLformat =  "https://chat.googleapis.com";
+
+	if (m_url.rfind(hangoutURLformat,0) == string::npos)
+	{
+		m_url.clear();
+		Logger::getLogger()->error("Hangouts webhook URL is not valid.");
+	}
 }
