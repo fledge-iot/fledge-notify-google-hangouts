@@ -26,9 +26,9 @@
 				"\"displayName\" : \"Enabled\", " \
 				"\"default\": \"false\" }, " \
 			"\"webhook\" : {\"description\" : \"Google Hangouts WebHook URL\", " \
-				"\"type\" : \"string\", " \
+				"\"type\" : \"URL\", " \
 				"\"default\" : \"https://chat.googleapis.com/v1/spaces/AAAAuf-65oc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=1v9abM8rugYWN4cJOrWYwD2K2EuI9Vkfi7Losgr1n3M%3D\", " \
-				"\"order\" : \"1\", \"displayName\" : \"Google Hangout Webhook URL\"}, " \
+				"\"order\" : \"1\", \"displayName\" : \"Google Hangout Webhook URL\", \"mandatory\" : \"true\" }, " \
 			"\"text\" : {\"description\" : \"Static message text\", " \
 				"\"type\" : \"string\", " \
 				"\"default\" : \"\", " \
@@ -95,8 +95,7 @@ bool plugin_deliver(PLUGIN_HANDLE handle,
 	Logger::getLogger()->info("Hangouts notification plugin_deliver(): deliveryName=%s, notificationName=%s, triggerReason=%s, message=%s",
 							deliveryName.c_str(), notificationName.c_str(), triggerReason.c_str(), message.c_str());
 	Hangouts *hangouts = (Hangouts *)handle;
-	hangouts->notify(notificationName, triggerReason, message);
-	return true;
+	return hangouts->notify(notificationName, triggerReason, message);
 }
 
 /**
